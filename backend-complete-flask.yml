@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: flask-svc
+spec:
+  selector:
+    app: flask
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-backend
+spec:
+  selector:
+    matchLabels:
+      app: flask
+      tier: backend
+      track: stable
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: flask
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: flask
+          image: "archangel91/k8s-test:flask_backend"
+          ports:
+            - name: http
+              containerPort: 5000

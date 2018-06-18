@@ -1,0 +1,25 @@
+VPC-ID = vpc-ef4d6f97
+Subnet = subnet-05b4d54f,subnet-75825f29,subnet-aa0a8385
+
+kops create cluster --name=cluster1.geekyarun.com --vpc=vpc-ef4d6f97 --cloud=aws --master-size=t2.medium  \
+--node-size=t2.micro --api-loadbalancer-type=internal  \
+--topology=private --networking=weave  --zones=us-east-1b,us-east-1a --dns-zone=geekyarun.com --master-volume-size=8 --node-volume-size=8 
+
+
+subnets:
+   - id: subnet-05b4d54f
+    name: us-east-1a
+    type: Private
+    zone: us-east-1a
+   - id: subnet-75825f29
+    name: us-east-1b
+    type: Private
+    zone: us-east-1b
+  - id: subnet-05b4d54f
+    name: utility-us-east-1a
+    type: Utility
+    zone: us-east-1a
+  - id: subnet-75825f29
+    name: utility-us-east-1b
+    type: Utility
+    zone: us-east-1b
