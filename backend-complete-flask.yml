@@ -10,7 +10,7 @@ spec:
   - protocol: TCP
     port: 5000
 ---
-apiVersion: apps/v1
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: flask-backend
