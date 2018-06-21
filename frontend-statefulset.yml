@@ -1,0 +1,75 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: backend.flask.sc
+  labels:
+    tier: Dev
+    app: backend.flask
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+  zones: us-east-1a, us-east-1b
+  fsType: ext4
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: frontend.pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: backend.flask.sc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-nginx-svc
+  labels:
+    App: frontend-nginx
+    tier: Dev
+  annotations:
+     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: web
+  selector:
+    app: frontend-nginx
+    tier: Dev
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-nginx
+spec:
+  selector:
+    matchLabels:
+      app: frontend-nginx
+      tier: Dev
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: frontend-nginx
+        tier: Dev
+    spec:
+      containers:
+      - name: nginx
+        image: archangel91/k8s-test:nginx_frontend
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginxmount
+          mountPath: /mnt
+      volumes:
+      - name: nginxmount
+        persistentVolumeClaim:
+         claimName: frontend.pvc
+

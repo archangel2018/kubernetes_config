@@ -1,0 +1,66 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: backend.flask.sc
+  labels:
+    tier: Dev
+    app: backend.flask
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+  zones: us-east-1a, us-east-1b
+  fsType: ext4
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-svc
+  labels:
+    App: backend.flask
+    tier: Dev
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+    protocol: TCP
+    name: web
+  selector:
+    app: backend-flask
+    tier: Dev
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: backend-flask-ss
+spec:
+  selector:
+    matchLabels:
+      app: backend-flask
+      tier: Dev
+  serviceName: "backend-flask"
+  replicas: 2
+  template:
+    metadata:
+      name: backend-flask-tmpl
+      labels:
+        app: backend-flask
+        tier: Dev
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: backend-flask
+        image: archangel91/k8s-test:flask_backend
+        ports:
+        - containerPort: 5000
+          name: backend-flask
+        volumeMounts:
+        - name: testmount
+          mountPath: /mnt
+  volumeClaimTemplates:
+  - metadata:
+     name: testmount
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
