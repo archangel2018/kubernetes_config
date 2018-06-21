@@ -1,10 +1,9 @@
 VPC-ID = vpc-ef4d6f97
 Subnet = subnet-05b4d54f,subnet-75825f29,subnet-aa0a8385
-
+OLD:
 kops create cluster --name=cluster1.geekyarun.com --vpc=vpc-ef4d6f97 --cloud=aws --master-size=t2.medium  \
 --node-size=t2.micro --api-loadbalancer-type=internal  \
 --topology=private --networking=weave  --zones=us-east-1b,us-east-1a --dns-zone=geekyarun.com --master-volume-size=8 --node-volume-size=8 
-
 
 subnets:
    - id: subnet-05b4d54f
@@ -23,3 +22,45 @@ subnets:
     name: utility-us-east-1b
     type: Utility
     zone: us-east-1b
+---------------------------------------------------------------
+
+New:
+
+kops create cluster --name=cluster1.geekyarun.com --vpc=vpc-ef4d6f97 --cloud=aws --master-size=t2.medium \
+ --image ami-a4dc46db --node-size=t2.micro --topology=private --networking=calico  --zones=us-east-1b,us-east-1a \
+ --master-zones=us-east-1d --dns-zone=geekyarun.com --master-volume-size=8 --node-volume-size=8 \
+ --admin-access=172.31.80.0/20 --associate-public-ip=false --ssh-access=172.31.80.0/20 --api-loadbalancer-type=internal 
+
+
+
+  subnets:
+  - cidr: 172.31.0.0/24
+    id: subnet-05b4d54f
+    name: us-east-1a
+    type: Private
+    zone: us-east-1a
+  - cidr: 172.31.16.0/24
+    id: subnet-75825f29
+    name: us-east-1b
+    type: Private
+    zone: us-east-1b
+  - cidr: 172.31.17.0/24
+    id: subnet-2d06de03
+    name: us-east-1d
+    type: Private
+    zone: us-east-1d
+  - cidr: 172.31.18.0/24
+    id: subnet-125c3158
+    name: utility-us-east-1a
+    type: Utility
+    zone: us-east-1a
+  - cidr: 172.31.19.0/24
+    id: subnet-984a94c4
+    name: utility-us-east-1b
+    type: Utility
+    zone: us-east-1b
+  - cidr: 172.31.80.0/20
+    id: subnet-aa0a8385
+    name: utility-us-east-1d
+    type: Utility
+    zone: us-east-1d
