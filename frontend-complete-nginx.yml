@@ -32,4 +32,4 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: "archangel91/k8s-test:nginx_frontend"
+        image: httpd
