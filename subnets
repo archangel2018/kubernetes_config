@@ -1,0 +1,31 @@
+  subnets:
+  - cidr: 172.31.0.0/24
+    id: subnet-05b4d54f
+    name: us-east-1a
+    type: Private
+    zone: us-east-1a
+  - cidr: 172.31.16.0/24
+    id: subnet-75825f29
+    name: us-east-1b
+    type: Private
+    zone: us-east-1b
+  - cidr: 172.31.17.0/24
+    id: subnet-2d06de03
+    name: us-east-1d
+    type: Private
+    zone: us-east-1d
+  - cidr: 172.31.18.0/24
+    id: subnet-125c3158
+    name: utility-us-east-1a
+    type: Utility
+    zone: us-east-1a
+  - cidr: 172.31.19.0/24
+    id: subnet-984a94c4
+    name: utility-us-east-1b
+    type: Utility
+    zone: us-east-1b
+  - cidr: 172.31.80.0/20
+    id: subnet-aa0a8385
+    name: utility-us-east-1d
+    type: Utility
+    zone: us-east-1d
